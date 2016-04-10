@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/fragment_accounts"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="I m fragment Accounts"
+        android:gravity="center"
+        android:background="#5eff6b"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</LinearLayout>
