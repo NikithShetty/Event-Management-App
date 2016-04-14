@@ -38,8 +38,8 @@ public class eventData {
         this.college = college;
     }
 
-    public int getFee() {
-        return fee;
+    public String getFee() {
+        return String.valueOf(fee);
     }
 
     public void setFee(int fee) {

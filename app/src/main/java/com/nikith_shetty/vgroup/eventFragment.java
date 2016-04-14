@@ -45,12 +45,19 @@ public class eventFragment extends Fragment {
 //        rv.setAdapter(rvAdapter);
 //        // Inflate the layout for this fragment
 //        return view;
-        rv = (RecyclerView)inflater.inflate(R.layout.fragment_event,container,false);
+        View view = inflater.inflate(R.layout.fragment_event,container,false);
+        eventDataList = new ArrayList<eventData>();
+        eventDataList.add(new eventData("Buggy Racing", "Dr.AIT", 50, "Dr.AIT campus", "", ""));
+        eventDataList.add(new eventData("Buggy Racing", "Dr.AIT", 50, "Dr.AIT campus", "", ""));
+        eventDataList.add(new eventData("Buggy Racing", "Dr.AIT", 50, "Dr.AIT campus", "", ""));
+        eventDataList.add(new eventData("Buggy Racing", "Dr.AIT", 50, "Dr.AIT campus", "", ""));
+        rv = (RecyclerView) view.findViewById(R.id.recyclerView);
+        rv.setHasFixedSize(true);
         rvAdapter = new RVAdapter(eventDataList);
         rv.setAdapter(rvAdapter);
         layout = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layout);
-        return rv;
+        return view;
     }
 
     @Override
