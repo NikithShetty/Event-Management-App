@@ -23,4 +23,27 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string-array name="event_array">
+        <item>Hog - A - Thon</item>
+        <item>The Room</item>
+        <item>Treasure Hunt</item>
+        <item>Buggy Racing</item>
+        <item>Code</item>
+    </string-array>
+    <string-array name="colleges_array">
+        <item>Dr.Ambedkar Institute of Technology</item>
+        <item>JSS Institute of Technology</item>
+        <item>RNS Institute of Technology</item>
+        <item>PES Institue of Technology</item>
+        <item>Nitte Minakshi Institute of Technology</item>
+    </string-array>
+    <string-array name="fav_array">
+        <item>Hog - A - Thon</item>
+        <item>The Room</item>
+    </string-array>
+    <string-array name="places_array">
+        <item>Nagarbhavi</item>
+        <item>Maleshwaram</item>
+        <item>Kengeri</item>
+    </string-array>
 </resources>

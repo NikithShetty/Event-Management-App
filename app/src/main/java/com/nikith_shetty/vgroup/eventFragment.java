@@ -4,11 +4,14 @@ package com.nikith_shetty.vgroup;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nikith_shetty.vgroup.R;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +19,10 @@ import com.nikith_shetty.vgroup.R;
 public class eventFragment extends Fragment {
 
     NavigationView view;
+    LinearLayoutManager layout;
+    RecyclerView rv;
+    RVAdapter rvAdapter;
+    List<eventData> eventDataList;
 
     public eventFragment() {
         // Required empty public constructor
@@ -29,8 +36,21 @@ public class eventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event, container, false);
+//        View view = inflater.inflate(R.layout.fragment_event, container, false);
+//        layout = new LinearLayoutManager(getActivity().getApplicationContext());
+//        rv = (RecyclerView)view.findViewById(R.id.recyclerView);
+//        rv.setHasFixedSize(true);
+//        rv.setLayoutManager(layout);
+//        rvAdapter = new RVAdapter(eventDataList);
+//        rv.setAdapter(rvAdapter);
+//        // Inflate the layout for this fragment
+//        return view;
+        rv = (RecyclerView)inflater.inflate(R.layout.fragment_event,container,false);
+        rvAdapter = new RVAdapter(eventDataList);
+        rv.setAdapter(rvAdapter);
+        layout = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(layout);
+        return rv;
     }
 
     @Override

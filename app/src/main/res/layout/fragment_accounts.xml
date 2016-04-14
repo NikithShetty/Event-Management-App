@@ -1,15 +1,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#ffee44">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="10sp"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Nikith Shetty"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="shettynikith3@gmail.com"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
     <TextView
-        android:id="@+id/fragment_accounts"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="I m fragment Accounts"
-        android:gravity="center"
-        android:background="#5eff6b"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Favourites : "
+        android:textSize="22sp"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/fav_array"
+        android:dividerHeight="4sp">
+    </ListView>
 
 </LinearLayout>
