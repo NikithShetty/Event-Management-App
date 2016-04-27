@@ -4,43 +4,15 @@
     android:layout_height="match_parent"
     tools:context="com.nikith_shetty.vgroup.homeFragment"
     android:orientation="vertical"
-    android:background="#44ffba">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Events"
-                android:textSize="30sp"
-                android:paddingLeft="5sp"/>
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:entries="@array/event_array"
-                android:dividerHeight="2sp">
-            </ListView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Places"
-                android:textSize="30sp"
-                android:paddingLeft="5sp"/>
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:entries="@array/places_array"
-                android:dividerHeight="2sp">
-            </ListView>
-        </LinearLayout>
-
-
+    android:background="#d9d9d9"
+    android:padding="15sp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Events : "/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/home_recyclerView">
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

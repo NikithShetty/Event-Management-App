@@ -2,11 +2,8 @@ package com.nikith_shetty.vgroup;
 
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.stormpath.sdk.Stormpath;
+import com.stormpath.sdk.StormpathCallback;
+import com.stormpath.sdk.models.StormpathError;
+import com.stormpath.sdk.models.UserProfile;
+import helper.classes.Global;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,15 +38,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "This is a SnackBar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -52,23 +45,24 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //send nav View to global data class
+        Global.setNavigationView(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Stormpath.getUserProfile(new StormpathCallback<UserProfile>() {
+            @Override
+            public void onSuccess(UserProfile userProfile) {
+            }
 
-//        //Add fragment to the View
-        homeFragment = new homeFragment();
-        homeFragment.setArguments(navigationView);
-//        transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(placeHolderId, homeFragment);
-//        transaction.commit();
-//        homeFragment.setArguments(navigationView);
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(placeHolderId, homeFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+            @Override public void onFailure(StormpathError error) {
+                // Show login navigationView again.
+                Stormpath.logout();
+                //Sign In Button implementation
 
-//        //Sign In Button implementation
-//        Button signin = (Button)findViewById(R.id.button_signIn);
+            }
+        });
+
+//        Button signin = (Button)drawer.findViewById(R.id.button_signIn);
 //        signin.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -76,6 +70,15 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
+        //Add fragment to the View
+        homeFragment = new homeFragment();
+        homeFragment.setArguments(navigationView);
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(placeHolderId, homeFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        //set listener to back_of_stack
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle navigation navigationView item clicks here.
 
         int id = item.getItemId();
 
@@ -180,5 +183,8 @@ public class MainActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.commit();
 
+    }
+    public void setTitle(String title){
+        getSupportActionBar().setTitle(title);
     }
 }

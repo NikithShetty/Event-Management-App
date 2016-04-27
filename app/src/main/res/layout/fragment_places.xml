@@ -4,12 +4,11 @@
     android:orientation="vertical"
     android:background="#c144ff">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="4sp"
-        android:entries="@array/places_array">
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerView_places">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

@@ -4,12 +4,11 @@
     android:orientation="vertical"
     android:background="#beff44">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="1dp"
-        android:entries="@array/colleges_array"
-        android:foregroundGravity="center">
-    </ListView>
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerView_colleges">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
