@@ -1,6 +1,7 @@
 package com.nikith_shetty.vgroup;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,13 +23,10 @@ import org.json.JSONArray;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StreamCorruptedException;
 
 import adapters.RVAdapter_colleges;
-import adapters.RVAdapter_places;
 import helper.classes.Global;
 import helper.classes.HTTPhelper;
-import models.EventData;
 import okhttp3.ResponseBody;
 
 
@@ -37,20 +35,26 @@ import okhttp3.ResponseBody;
  */
 public class collegesFragment extends Fragment {
 
-    NavigationView navigationView;
     View view;
     ProgressDialog progressDialog;
     JSONArray jsonArray;
     RecyclerView rv;
     RVAdapter_colleges rvAdapter_colleges;
     LinearLayoutManager layout;
+    Context context;
 
     public collegesFragment() {
         // Required empty public constructor
     }
 
-    public void setArguments(NavigationView view) {
-        this.navigationView = view;
+    public static collegesFragment newInstance(){
+        return new collegesFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -59,14 +63,17 @@ public class collegesFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_colleges, container, false);
 
-        progressDialog = ProgressDialog.show(getActivity(), "", "Loading...");
+        /* Fetch college list from server
+         *
+         */
+        progressDialog = ProgressDialog.show(context, "", "Loading...");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
                     jsonArray = convertFromInputStreamToJsonobject(HTTPhelper.get(Global.GET_COLLEGES_DATA).body());
                     Intent intent = new Intent(Global.ACTION_DATA_RECEIVED);
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -80,15 +87,15 @@ public class collegesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        navigationView.setCheckedItem(R.id.nav_colleges);
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
+        LocalBroadcastManager.getInstance(context).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(onEventDataReceivedPlaces);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(onEventDataReceivedPlaces);
+        progressDialog = null;
     }
 
     public JSONArray convertFromInputStreamToJsonobject(ResponseBody responseBody){
@@ -131,16 +138,13 @@ public class collegesFragment extends Fragment {
             }
         });
         rv.setAdapter(rvAdapter_colleges);
-        layout = new LinearLayoutManager(getActivity());
+        layout = new LinearLayoutManager(context);
         rv.setLayoutManager(layout);
     }
 
     private void makeTransactionToEventsFragment(String data) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        eventFragment eventFragment = new eventFragment();
-        eventFragment.setArguments(Global.getNavigationView());
-        eventFragment.setFilter(com.nikith_shetty.vgroup.eventFragment.COLLEGES_FILTER,data );
-        fragmentTransaction.replace(R.id.content_area,eventFragment);
+        fragmentTransaction.replace(R.id.content_area,eventFragment.newInstance(com.nikith_shetty.vgroup.eventFragment.COLLEGES_FILTER, data));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

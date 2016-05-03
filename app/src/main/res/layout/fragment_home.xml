@@ -4,15 +4,17 @@
     android:layout_height="match_parent"
     tools:context="com.nikith_shetty.vgroup.homeFragment"
     android:orientation="vertical"
-    android:background="#d9d9d9"
-    android:padding="15sp">
+    android:background="#d9d9d9">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Events : "/>
+        android:text="Events : "
+        android:padding="15sp"/>
     <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/home_recyclerView">
+        android:id="@+id/home_recyclerView"
+        android:paddingLeft="15sp"
+        android:paddingRight="15sp">
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>

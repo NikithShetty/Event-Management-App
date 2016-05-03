@@ -35,4 +35,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.stormpath.sdk:stormpath-sdk-android:1.1.2'
+    compile 'com.stormpath.sdk:stormpath-sdk-android-ui:1.0.2'
 }

@@ -1,5 +1,6 @@
 package com.nikith_shetty.vgroup;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,26 +11,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import com.stormpath.sdk.Stormpath;
 import com.stormpath.sdk.StormpathCallback;
 import com.stormpath.sdk.models.StormpathError;
 import com.stormpath.sdk.models.UserProfile;
+
+import javax.microedition.khronos.opengles.GL;
+
 import helper.classes.Global;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    homeFragment homeFragment;
-    eventFragment eventFragment;
-    collegesFragment collegesFragment;
-    accountsFragment accountsFragment;
-    placesFragment placesFragment;
     FragmentTransaction transaction;
     int placeHolderId = R.id.content_area;
     NavigationView navigationView;
     Fragment frag;
+    View headerView;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -49,62 +54,102 @@ public class MainActivity extends AppCompatActivity
         Global.setNavigationView(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Stormpath.getUserProfile(new StormpathCallback<UserProfile>() {
-            @Override
-            public void onSuccess(UserProfile userProfile) {
-            }
-
-            @Override public void onFailure(StormpathError error) {
-                // Show login navigationView again.
-                Stormpath.logout();
-                //Sign In Button implementation
-
-            }
-        });
-
-//        Button signin = (Button)drawer.findViewById(R.id.button_signIn);
-//        signin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getParent(),LoginActivity.class));
-//            }
-//        });
-
         //Add fragment to the View
-        homeFragment = new homeFragment();
-        homeFragment.setArguments(navigationView);
         transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(placeHolderId, homeFragment);
+        transaction.replace(placeHolderId, homeFragment.newInstance());
         transaction.addToBackStack(null);
         transaction.commit();
 
         //set listener to back_of_stack
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                frag = getSupportFragmentManager().findFragmentByTag("visible_fragment");
-                if(frag instanceof homeFragment){
-                    getSupportActionBar().setTitle("V Group");
-                }
-                if(frag instanceof eventFragment){
-                    getSupportActionBar().setTitle("Events");
-                }
-                if(frag instanceof accountsFragment){
-                    getSupportActionBar().setTitle("Accounts");
-                }
-                if(frag instanceof collegesFragment){
-                    getSupportActionBar().setTitle("Colleges");
-                }
-                if(frag instanceof placesFragment){
-                    getSupportActionBar().setTitle("Places");
-                }
+//        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//            @Override
+//            public void onBackStackChanged() {
+//                frag = getSupportFragmentManager().findFragmentByTag("visible_fragment");
+//                if(frag instanceof homeFragment){
+//                    getSupportActionBar().setTitle("V Group");
+//                }
+//                if(frag instanceof eventFragment){
+//                    getSupportActionBar().setTitle("Events");
+//                }
+//                if(frag instanceof accountsFragment){
+//                    getSupportActionBar().setTitle("Accounts");
+//                }
+//                if(frag instanceof collegesFragment){
+//                    getSupportActionBar().setTitle("Colleges");
+//                }
+//                if(frag instanceof placesFragment){
+//                    getSupportActionBar().setTitle("Places");
+//                }
+//            }
+//        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpHeaderView();
+    }
+
+    private void setUpHeaderView() {
+        if(Stormpath.accessToken() == null){
+            Log.e("Login In Error", "No records");
+                if(headerView != null)
+                    navigationView.removeHeaderView(headerView);
+                headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+                Button signin = (Button)headerView.findViewById(R.id.button_signIn);
+                signin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (drawer.isDrawerOpen(GravityCompat.START))
+                            drawer.closeDrawer(GravityCompat.START);
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    }
+                });
+        }else{
+            String uName = Global.getUserName();
+            if(uName.equals("")){
+                getUserProfile();
+                uName = Global.getUserName();
             }
-        });
+            Log.e("Login In Success", "Records found - " + uName);
+                if(headerView!=null)
+                    navigationView.removeHeaderView(headerView);
+                headerView = navigationView.inflateHeaderView(R.layout.nav_header_signedin);
+                TextView userName = (TextView)headerView.findViewById(R.id.header_userName);
+                userName.setText(uName);
+        }
+    }
+
+    private void getUserProfile() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (Global.getUserName().equals("")){
+                    Stormpath.getUserProfile(new StormpathCallback<UserProfile>() {
+                        @Override
+                        public void onSuccess(UserProfile userProfile) {
+                            Global.setUserName(userProfile.getFullName());
+                        }
+
+                        @Override
+                        public void onFailure(StormpathError error) {
+                            if(Global.getUserName() != "")
+                                Global.setUserName("");
+                        }
+                    });
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setUpHeaderView();
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -127,7 +172,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            Stormpath.logout();
+            setUpHeaderView();
             return true;
         }
 
@@ -142,33 +189,21 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            if(homeFragment==null)homeFragment = new homeFragment();
-            homeFragment.setArguments(navigationView);
-            makeTransaction(placeHolderId,homeFragment);
+            makeTransaction(placeHolderId, homeFragment.newInstance());
             getSupportActionBar().setTitle("V Group");
         }else if (id == R.id.nav_events) {
-            if(eventFragment==null)eventFragment = new eventFragment();
-            eventFragment.setArguments(navigationView);
-            makeTransaction(placeHolderId,eventFragment);
+            makeTransaction(placeHolderId, eventFragment.newInstance());
             getSupportActionBar().setTitle("Events");
         } else if (id == R.id.nav_account) {
-            if(accountsFragment==null)accountsFragment = new accountsFragment();
-            accountsFragment.setArguments(navigationView);
-            makeTransaction(placeHolderId,accountsFragment);
+            makeTransaction(placeHolderId, accountsFragment.newInstance());
             getSupportActionBar().setTitle("Accounts");
         } else if (id == R.id.nav_colleges) {
-            if(collegesFragment==null)collegesFragment = new collegesFragment();
-            collegesFragment.setArguments(navigationView);
-            makeTransaction(placeHolderId,collegesFragment);
+            makeTransaction(placeHolderId, collegesFragment.newInstance());
             getSupportActionBar().setTitle("Colleges");
         } else if (id == R.id.nav_places) {
-            if(placesFragment==null)placesFragment = new placesFragment();
-            placesFragment.setArguments(navigationView);
-            makeTransaction(placeHolderId,placesFragment);
+            makeTransaction(placeHolderId, placesFragment.newInstance());
             getSupportActionBar().setTitle("Places");
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
@@ -187,4 +222,5 @@ public class MainActivity extends AppCompatActivity
     public void setTitle(String title){
         getSupportActionBar().setTitle(title);
     }
+
 }

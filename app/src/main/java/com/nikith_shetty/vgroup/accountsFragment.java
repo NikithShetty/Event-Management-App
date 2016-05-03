@@ -1,6 +1,7 @@
 package com.nikith_shetty.vgroup;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,14 +16,20 @@ import com.nikith_shetty.vgroup.R;
  */
 public class accountsFragment extends Fragment {
 
-    NavigationView view;
+    Context context;
 
     public accountsFragment() {
         // Required empty public constructor
     }
 
-    public void setArguments(NavigationView view) {
-        this.view = view;
+    public static accountsFragment newInstance(){
+        return new accountsFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -35,6 +42,5 @@ public class accountsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        view.setCheckedItem(R.id.nav_account);
     }
 }

@@ -30,22 +30,27 @@ import okhttp3.ResponseBody;
  */
 public class placesFragment extends Fragment {
 
-    NavigationView navigationView;
     View view;
     ProgressDialog progressDialog;
     JSONArray jsonArray;
     RecyclerView rv;
     RVAdapter_places rvAdapter_places;
     LinearLayoutManager layout;
+    Context context;
 
     public placesFragment() {
         // Required empty public constructor
     }
 
-    public void setArguments(NavigationView view) {
-        this.navigationView = view;
+    public static placesFragment newInstance(){
+        return new placesFragment();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,14 +72,12 @@ public class placesFragment extends Fragment {
             }
         }).start();
 
-        // Inflate the layout for this fragment
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        navigationView.setCheckedItem(R.id.nav_places);
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
     }
@@ -83,6 +86,7 @@ public class placesFragment extends Fragment {
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(onEventDataReceivedPlaces);
+        progressDialog = null;
     }
 
     public JSONArray convertFromInputStreamToJsonobject(ResponseBody responseBody){
@@ -118,7 +122,6 @@ public class placesFragment extends Fragment {
         rv = (RecyclerView) view.findViewById(R.id.recyclerView_places);
         rv.setHasFixedSize(true);
         rvAdapter_places = new RVAdapter_places(jsonArray);
-
         rvAdapter_places.setListener(new RVAdapter_places.Listener() {
             @Override
             public void onClick(String data) {
@@ -132,11 +135,7 @@ public class placesFragment extends Fragment {
 
     private void makeTransactionToEventsFragment(String data) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        eventFragment eventFragment = new eventFragment();
-        eventFragment.setArguments(Global.getNavigationView());
-
-        eventFragment.setFilter(com.nikith_shetty.vgroup.eventFragment.PLACES_FILTER,data );
-        fragmentTransaction.replace(R.id.content_area,eventFragment);
+        fragmentTransaction.replace(R.id.content_area,eventFragment.newInstance(com.nikith_shetty.vgroup.eventFragment.PLACES_FILTER, data));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
