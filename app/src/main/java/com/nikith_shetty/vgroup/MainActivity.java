@@ -27,12 +27,11 @@ import javax.microedition.khronos.opengles.GL;
 import helper.classes.Global;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, appTitle{
 
     FragmentTransaction transaction;
     int placeHolderId = R.id.content_area;
     NavigationView navigationView;
-    Fragment frag;
     View headerView;
     DrawerLayout drawer;
 
@@ -57,31 +56,7 @@ public class MainActivity extends AppCompatActivity
         //Add fragment to the View
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(placeHolderId, homeFragment.newInstance());
-        transaction.addToBackStack(null);
         transaction.commit();
-
-        //set listener to back_of_stack
-//        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-//            @Override
-//            public void onBackStackChanged() {
-//                frag = getSupportFragmentManager().findFragmentByTag("visible_fragment");
-//                if(frag instanceof homeFragment){
-//                    getSupportActionBar().setTitle("V Group");
-//                }
-//                if(frag instanceof eventFragment){
-//                    getSupportActionBar().setTitle("Events");
-//                }
-//                if(frag instanceof accountsFragment){
-//                    getSupportActionBar().setTitle("Accounts");
-//                }
-//                if(frag instanceof collegesFragment){
-//                    getSupportActionBar().setTitle("Colleges");
-//                }
-//                if(frag instanceof placesFragment){
-//                    getSupportActionBar().setTitle("Places");
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -173,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            Global.removeUserName();
             Stormpath.logout();
             setUpHeaderView();
             return true;
@@ -190,19 +166,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             makeTransaction(placeHolderId, homeFragment.newInstance());
-            getSupportActionBar().setTitle("V Group");
+//            getSupportActionBar().appTitle("V Group");
         }else if (id == R.id.nav_events) {
             makeTransaction(placeHolderId, eventFragment.newInstance());
-            getSupportActionBar().setTitle("Events");
+//            getSupportActionBar().appTitle("Events");
         } else if (id == R.id.nav_account) {
             makeTransaction(placeHolderId, accountsFragment.newInstance());
-            getSupportActionBar().setTitle("Accounts");
+//            getSupportActionBar().appTitle("Accounts");
         } else if (id == R.id.nav_colleges) {
             makeTransaction(placeHolderId, collegesFragment.newInstance());
-            getSupportActionBar().setTitle("Colleges");
+//            getSupportActionBar().appTitle("Colleges");
         } else if (id == R.id.nav_places) {
             makeTransaction(placeHolderId, placesFragment.newInstance());
-            getSupportActionBar().setTitle("Places");
+//            getSupportActionBar().appTitle("Places");
         } else if (id == R.id.nav_share) {
 
         }
@@ -215,12 +191,12 @@ public class MainActivity extends AppCompatActivity
     private void makeTransaction(int replaceId, Fragment frag){
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(replaceId, frag,"visible_fragment");
-        transaction.addToBackStack(null);
         transaction.commit();
 
     }
-    public void setTitle(String title){
+
+    @Override
+    public void onSetTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
-
 }

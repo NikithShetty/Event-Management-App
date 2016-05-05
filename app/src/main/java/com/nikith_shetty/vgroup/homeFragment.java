@@ -1,11 +1,11 @@
 package com.nikith_shetty.vgroup;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -31,6 +31,7 @@ public class homeFragment extends Fragment {
     RVAdapter_home rvAdapterHome;
     private ProgressDialog progressDialog;
     Context context;
+    appTitle appTitle;
 
     public homeFragment() {
         // Required empty public constructor
@@ -44,6 +45,12 @@ public class homeFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        final Activity activity = getActivity();
+        if (activity instanceof appTitle) {
+            appTitle = (appTitle) activity;
+        } else {
+            throw new IllegalArgumentException("Activity must implement appTitle");
+        }
     }
 
     @Override
@@ -51,7 +58,7 @@ public class homeFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //check for recent views
+        //check for recently viewed events
         if(Global.getRecent()!=null){
             recentEvents = Global.getRecent();
             setUpRecyclerView();
@@ -71,6 +78,7 @@ public class homeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        appTitle.onSetTitle("V Group");
     }
 
     @Override
@@ -95,6 +103,9 @@ public class homeFragment extends Fragment {
         rv.setAdapter(rvAdapterHome);
         layout = new StaggeredGridLayoutManager(2, 1);
         rv.setLayoutManager(layout);
+    }
+
+    public interface homeFragmentListener{
     }
 
 }

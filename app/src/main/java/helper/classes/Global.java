@@ -121,4 +121,11 @@ public class Global extends Application {
         return preferences.getString("userName", "");
     }
 
+    public static void removeUserName(){
+        SharedPreferences preferences = context.getSharedPreferences(preferenceNAME, context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("userName");
+        editor.commit();
+    }
+
 }

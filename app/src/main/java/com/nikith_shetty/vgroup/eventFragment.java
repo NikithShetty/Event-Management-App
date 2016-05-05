@@ -1,6 +1,7 @@
 package com.nikith_shetty.vgroup;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -55,6 +56,7 @@ public class eventFragment extends Fragment{
     SwipeRefreshLayout swipeRefreshLayout;
     Bundle config;
     Context context;
+    appTitle appTitle;
 
     static List<EventData> eventDataList;
 
@@ -80,6 +82,12 @@ public class eventFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        final Activity activity = getActivity();
+        if (activity instanceof appTitle) {
+            appTitle = (appTitle) activity;
+        } else {
+            throw new IllegalArgumentException("Activity must implement appTitle");
+        }
     }
 
     @Override
@@ -116,7 +124,7 @@ public class eventFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-//        nav_view.setCheckedItem(R.id.nav_events);
+        appTitle.onSetTitle("Events");
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(context).registerReceiver(onEventDataReceived, eventDataReceived);
         ((MainActivity)context).setTitle("Events");
@@ -235,5 +243,8 @@ public class eventFragment extends Fragment{
     public void setFilter(int filter, String data){
         FILTER = filter;
         this.data = data;
+    }
+
+    public interface eventFragmentListener{
     }
 }

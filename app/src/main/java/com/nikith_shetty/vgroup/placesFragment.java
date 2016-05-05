@@ -1,6 +1,7 @@
 package com.nikith_shetty.vgroup;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,6 +38,7 @@ public class placesFragment extends Fragment {
     RVAdapter_places rvAdapter_places;
     LinearLayoutManager layout;
     Context context;
+    appTitle appTitle;
 
     public placesFragment() {
         // Required empty public constructor
@@ -50,6 +52,12 @@ public class placesFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        final Activity activity = getActivity();
+        if (activity instanceof appTitle) {
+            appTitle = (appTitle) activity;
+        } else {
+            throw new IllegalArgumentException("Activity must implement appTitle");
+        }
     }
 
     @Override
@@ -78,6 +86,7 @@ public class placesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        appTitle.onSetTitle("Places");
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
     }
@@ -138,5 +147,8 @@ public class placesFragment extends Fragment {
         fragmentTransaction.replace(R.id.content_area,eventFragment.newInstance(com.nikith_shetty.vgroup.eventFragment.PLACES_FILTER, data));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    public interface placesFragmentListener{
     }
 }

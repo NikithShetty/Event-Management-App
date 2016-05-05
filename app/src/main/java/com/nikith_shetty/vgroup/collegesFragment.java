@@ -42,6 +42,7 @@ public class collegesFragment extends Fragment {
     RVAdapter_colleges rvAdapter_colleges;
     LinearLayoutManager layout;
     Context context;
+    appTitle appTitle;
 
     public collegesFragment() {
         // Required empty public constructor
@@ -55,6 +56,12 @@ public class collegesFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        final Activity activity = getActivity();
+        if (activity instanceof appTitle) {
+            appTitle = (appTitle) activity;
+        } else {
+            throw new IllegalArgumentException("Activity must implement appTitle");
+        }
     }
 
     @Override
@@ -87,6 +94,7 @@ public class collegesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        appTitle.onSetTitle("Colleges");
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(context).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
     }
@@ -147,6 +155,9 @@ public class collegesFragment extends Fragment {
         fragmentTransaction.replace(R.id.content_area,eventFragment.newInstance(com.nikith_shetty.vgroup.eventFragment.COLLEGES_FILTER, data));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    public interface collegesFragmentListener{
     }
 
 }

@@ -1,6 +1,7 @@
 package com.nikith_shetty.vgroup;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,7 @@ import com.nikith_shetty.vgroup.R;
 public class accountsFragment extends Fragment {
 
     Context context;
+    appTitle appTitle;
 
     public accountsFragment() {
         // Required empty public constructor
@@ -30,6 +32,12 @@ public class accountsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        final Activity activity = getActivity();
+        if (activity instanceof appTitle) {
+            appTitle = (appTitle) activity;
+        } else {
+            throw new IllegalArgumentException("Activity must implement appTitle");
+        }
     }
 
     @Override
@@ -42,5 +50,9 @@ public class accountsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        appTitle.onSetTitle("My Dashboard");
+    }
+
+    public interface accountFragmentListener{
     }
 }
