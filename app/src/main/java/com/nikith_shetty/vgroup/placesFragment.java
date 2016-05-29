@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +37,7 @@ public class placesFragment extends Fragment {
     RVAdapter_places rvAdapter_places;
     LinearLayoutManager layout;
     Context context;
-    appTitle appTitle;
+    appTitleInterface appTitleInterface;
 
     public placesFragment() {
         // Required empty public constructor
@@ -53,10 +52,10 @@ public class placesFragment extends Fragment {
         super.onAttach(context);
         this.context = context;
         final Activity activity = getActivity();
-        if (activity instanceof appTitle) {
-            appTitle = (appTitle) activity;
+        if (activity instanceof appTitleInterface) {
+            appTitleInterface = (appTitleInterface) activity;
         } else {
-            throw new IllegalArgumentException("Activity must implement appTitle");
+            throw new IllegalArgumentException("Activity must implement appTitleInterface");
         }
     }
 
@@ -86,7 +85,7 @@ public class placesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        appTitle.onSetTitle("Places");
+        appTitleInterface.onSetTitle("Places");
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
     }

@@ -31,7 +31,7 @@ public class homeFragment extends Fragment {
     RVAdapter_home rvAdapterHome;
     private ProgressDialog progressDialog;
     Context context;
-    appTitle appTitle;
+    appTitleInterface appTitleInterface;
 
     public homeFragment() {
         // Required empty public constructor
@@ -46,10 +46,10 @@ public class homeFragment extends Fragment {
         super.onAttach(context);
         this.context = context;
         final Activity activity = getActivity();
-        if (activity instanceof appTitle) {
-            appTitle = (appTitle) activity;
+        if (activity instanceof appTitleInterface) {
+            appTitleInterface = (appTitleInterface) activity;
         } else {
-            throw new IllegalArgumentException("Activity must implement appTitle");
+            throw new IllegalArgumentException("Activity must implement appTitleInterface");
         }
     }
 
@@ -78,7 +78,7 @@ public class homeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        appTitle.onSetTitle("V Group");
+        appTitleInterface.onSetTitle("V Group");
     }
 
     @Override

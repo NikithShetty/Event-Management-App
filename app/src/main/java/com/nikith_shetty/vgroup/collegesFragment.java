@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -42,7 +41,7 @@ public class collegesFragment extends Fragment {
     RVAdapter_colleges rvAdapter_colleges;
     LinearLayoutManager layout;
     Context context;
-    appTitle appTitle;
+    appTitleInterface appTitleInterface;
 
     public collegesFragment() {
         // Required empty public constructor
@@ -57,10 +56,10 @@ public class collegesFragment extends Fragment {
         super.onAttach(context);
         this.context = context;
         final Activity activity = getActivity();
-        if (activity instanceof appTitle) {
-            appTitle = (appTitle) activity;
+        if (activity instanceof appTitleInterface) {
+            appTitleInterface = (appTitleInterface) activity;
         } else {
-            throw new IllegalArgumentException("Activity must implement appTitle");
+            throw new IllegalArgumentException("Activity must implement appTitleInterface");
         }
     }
 
@@ -94,7 +93,7 @@ public class collegesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        appTitle.onSetTitle("Colleges");
+        appTitleInterface.onSetTitle("Colleges");
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(context).registerReceiver(onEventDataReceivedPlaces, eventDataReceived);
     }

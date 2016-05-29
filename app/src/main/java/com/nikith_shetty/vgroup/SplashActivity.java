@@ -2,8 +2,10 @@ package com.nikith_shetty.vgroup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -21,10 +23,13 @@ import models.EventData;
 public class SplashActivity extends AppCompatActivity {
 
     List<EventData> eventDataList;
+    ImageView imageView;
+    Handler handler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.acitvity_splash);
 
         eventDataList = Global.loadEventDataList(getApplicationContext());
         if(eventDataList == null)
@@ -34,6 +39,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void downloadEventData() {
+        imageView = (ImageView)findViewById(R.id.splash_imageView);
+        if (imageView != null) {
+        }
         eventDataList = new ArrayList<EventData>();
         new Thread(new Runnable() {
             @Override
@@ -43,7 +51,12 @@ public class SplashActivity extends AppCompatActivity {
                     Reader reader = new InputStreamReader(HTTPhelper.get(Global.GET_EVENTS_DATA).body().byteStream());
                     eventDataList = gson.fromJson(reader, new TypeToken<List<EventData>>(){}.getType());
                     Global.saveEventDataList(getBaseContext(), eventDataList);
-                    gotoHomePage();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            gotoHomePage();
+                        }
+                    });
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -52,9 +65,14 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void gotoHomePage() {
-        /*Goto the home page*/
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, 1000);
     }
 }

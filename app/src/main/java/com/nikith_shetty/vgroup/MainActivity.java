@@ -1,7 +1,6 @@
 package com.nikith_shetty.vgroup;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,18 +21,17 @@ import com.stormpath.sdk.StormpathCallback;
 import com.stormpath.sdk.models.StormpathError;
 import com.stormpath.sdk.models.UserProfile;
 
-import javax.microedition.khronos.opengles.GL;
-
 import helper.classes.Global;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, appTitle{
+        implements NavigationView.OnNavigationItemSelectedListener, appTitleInterface {
 
     FragmentTransaction transaction;
     int placeHolderId = R.id.content_area;
     NavigationView navigationView;
     View headerView;
     DrawerLayout drawer;
+    int lastSelectedItemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +51,33 @@ public class MainActivity extends AppCompatActivity
         Global.setNavigationView(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Add fragment to the View
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(placeHolderId, homeFragment.newInstance());
-        transaction.commit();
+        if(savedInstanceState != null)
+            changeFragment(savedInstanceState.getInt("lastSelectedItemId"));
+        else{
+            //Add fragment to the View
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(placeHolderId, homeFragment.newInstance());
+            transaction.commit();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        changeFragment(lastSelectedItemId);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpHeaderView();
+        changeFragment(lastSelectedItemId);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("lastSelectedItemId", lastSelectedItemId);
     }
 
     private void setUpHeaderView() {
@@ -161,31 +176,28 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation navigationView item clicks here.
-
         int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            makeTransaction(placeHolderId, homeFragment.newInstance());
-//            getSupportActionBar().appTitle("V Group");
-        }else if (id == R.id.nav_events) {
-            makeTransaction(placeHolderId, eventFragment.newInstance());
-//            getSupportActionBar().appTitle("Events");
-        } else if (id == R.id.nav_account) {
-            makeTransaction(placeHolderId, accountsFragment.newInstance());
-//            getSupportActionBar().appTitle("Accounts");
-        } else if (id == R.id.nav_colleges) {
-            makeTransaction(placeHolderId, collegesFragment.newInstance());
-//            getSupportActionBar().appTitle("Colleges");
-        } else if (id == R.id.nav_places) {
-            makeTransaction(placeHolderId, placesFragment.newInstance());
-//            getSupportActionBar().appTitle("Places");
-        } else if (id == R.id.nav_share) {
-
-        }
-
+        lastSelectedItemId = id;
+        changeFragment(id);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void changeFragment(int id) {
+        if (id == R.id.nav_home) {
+            makeTransaction(placeHolderId, homeFragment.newInstance());
+        }else if (id == R.id.nav_events) {
+            makeTransaction(placeHolderId, eventFragment.newInstance());
+        } else if (id == R.id.nav_account) {
+            makeTransaction(placeHolderId, accountsFragment.newInstance());
+        } else if (id == R.id.nav_colleges) {
+            makeTransaction(placeHolderId, collegesFragment.newInstance());
+        } else if (id == R.id.nav_places) {
+            makeTransaction(placeHolderId, placesFragment.newInstance());
+        } else if (id == R.id.nav_share) {
+
+        }
     }
 
     private void makeTransaction(int replaceId, Fragment frag){

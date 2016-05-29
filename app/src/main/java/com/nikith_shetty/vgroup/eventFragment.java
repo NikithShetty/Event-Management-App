@@ -9,10 +9,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import helper.classes.Global;
@@ -56,7 +55,7 @@ public class eventFragment extends Fragment{
     SwipeRefreshLayout swipeRefreshLayout;
     Bundle config;
     Context context;
-    appTitle appTitle;
+    appTitleInterface appTitleInterface;
 
     static List<EventData> eventDataList;
 
@@ -83,10 +82,10 @@ public class eventFragment extends Fragment{
         super.onAttach(context);
         this.context = context;
         final Activity activity = getActivity();
-        if (activity instanceof appTitle) {
-            appTitle = (appTitle) activity;
+        if (activity instanceof appTitleInterface) {
+            appTitleInterface = (appTitleInterface) activity;
         } else {
-            throw new IllegalArgumentException("Activity must implement appTitle");
+            throw new IllegalArgumentException("Activity must implement appTitleInterface");
         }
     }
 
@@ -124,7 +123,7 @@ public class eventFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        appTitle.onSetTitle("Events");
+        appTitleInterface.onSetTitle("Events");
         IntentFilter eventDataReceived = new IntentFilter(Global.ACTION_DATA_RECEIVED);
         LocalBroadcastManager.getInstance(context).registerReceiver(onEventDataReceived, eventDataReceived);
         ((MainActivity)context).setTitle("Events");
@@ -180,6 +179,9 @@ public class eventFragment extends Fragment{
         rv.setAdapter(rvAdapterEvents);
         layout = new LinearLayoutManager(context);
         rv.setLayoutManager(layout);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setChangeDuration(500);
+        rv.setItemAnimator(itemAnimator);
     }
 
     private BroadcastReceiver onEventDataReceived = new BroadcastReceiver() {

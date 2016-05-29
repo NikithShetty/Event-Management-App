@@ -146,7 +146,6 @@ public class forgotPasswordFragment extends Fragment {
     }
 
     public interface ResetPasswordFragmentListener {
-        // TODO: Update argument type and name
         void onFragmentDone();
     }
 

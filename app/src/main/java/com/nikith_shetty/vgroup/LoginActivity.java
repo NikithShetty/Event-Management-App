@@ -1,16 +1,9 @@
 package com.nikith_shetty.vgroup;
 
-import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.stormpath.sdk.Stormpath;
-import com.stormpath.sdk.StormpathCallback;
-import com.stormpath.sdk.models.StormpathError;
-import com.stormpath.sdk.models.UserProfile;
-
-import helper.classes.Global;
 
 public class LoginActivity extends AppCompatActivity implements com.nikith_shetty.vgroup.loginFragment.LoginFragmentListener, com.nikith_shetty.vgroup.registerFragment.RegisterFragmentListener, com.nikith_shetty.vgroup.forgotPasswordFragment.ResetPasswordFragmentListener {
 

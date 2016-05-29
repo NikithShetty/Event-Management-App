@@ -160,7 +160,6 @@ public class registerFragment extends Fragment {
     }
 
     public interface RegisterFragmentListener {
-        // TODO: Update argument type and name
         void onFragmentDone();
     }
 

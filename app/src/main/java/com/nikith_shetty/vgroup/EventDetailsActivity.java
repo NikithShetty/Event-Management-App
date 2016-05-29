@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -26,6 +28,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     TextView detailsTxt;
     @Bind(R.id.details_venue)
     TextView venueTxt;
+    @Bind(R.id.details_fee_layout)
+    LinearLayout fee_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(data.getEventName());
         eventNameTxt.setText(data.getEventName());
         collegeTxt.setText(data.getCollege());
-        feeTxt.setText(data.getFee());
+        if(Integer.parseInt(data.getFee())==0){
+            fee_layout.removeAllViews();
+        }else{
+            feeTxt.setText(data.getFee());
+        }
         detailsTxt.setText(data.getDetails());
         String venue = data.getVenue().getStreetAddr() + ", " + data.getVenue().getArea() + ", " + data.getVenue().getCity() + ", " + data.getVenue().getState() + "\n" + data.getVenue().getPincode();
         venueTxt.setText(venue);

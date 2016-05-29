@@ -4,13 +4,10 @@ package com.nikith_shetty.vgroup;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.nikith_shetty.vgroup.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +15,7 @@ import com.nikith_shetty.vgroup.R;
 public class accountsFragment extends Fragment {
 
     Context context;
-    appTitle appTitle;
+    appTitleInterface appTitleInterface;
 
     public accountsFragment() {
         // Required empty public constructor
@@ -33,10 +30,10 @@ public class accountsFragment extends Fragment {
         super.onAttach(context);
         this.context = context;
         final Activity activity = getActivity();
-        if (activity instanceof appTitle) {
-            appTitle = (appTitle) activity;
+        if (activity instanceof appTitleInterface) {
+            appTitleInterface = (appTitleInterface) activity;
         } else {
-            throw new IllegalArgumentException("Activity must implement appTitle");
+            throw new IllegalArgumentException("Activity must implement appTitleInterface");
         }
     }
 
@@ -50,7 +47,7 @@ public class accountsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        appTitle.onSetTitle("My Dashboard");
+        appTitleInterface.onSetTitle("My Dashboard");
     }
 
     public interface accountFragmentListener{
